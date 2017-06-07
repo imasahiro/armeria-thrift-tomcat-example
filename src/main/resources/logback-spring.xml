@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <springProperty name="DEFAULT_LEVEL_CONFIG" source="log.defaultLevel"/>
+  <springProperty name="DIRECTORY_CONFIG" source="log.directory"/>
+  <springProperty name="LOG_FILE_BASE_CONFIG" source="log.fileBase"/>
+  <springProperty name="MAX_HISTORY_CONFIG" source="log.maxHistory"/>
+
+  <property name="DEFAULT_LEVEL" value="${DEFAULT_LEVEL_CONFIG:-INFO}"/>
+  <property name="LOG_FILE_BASE" value="${LOG_FILE_BASE_CONFIG:-default}"/>
+
+  <!-- Default is 1 month (24 hours * 30) -->
+  <property name="MAX_HISTORY" value="${MAX_HISTORY_CONFIG:-720}"/>
+
+  <property name="DIRECTORY" value="${DIRECTORY_CONFIG:-/tmp/logs/${LOG_FILE_BASE}}"/>
+  <property name="LOG_PATTERN" value="${FILE_LOG_PATTERN}"/>
+  <property name="IMMEDIATE_FLUSH" value="true"/>
+
+  <!-- Can set additional logging configuration. -->
+  <include optional="true" resource="logback-custom.xml"/>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+      <immediateFlush>${IMMEDIATE_FLUSH}</immediateFlush>
+    </encoder>
+    <file>${DIRECTORY}/${LOG_FILE_BASE}_log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rolling hourly -->
+      <fileNamePattern>${DIRECTORY}/${LOG_FILE_BASE}_log.%d{yyyy-MM-dd-HH}.gz</fileNamePattern>
+      <maxHistory>${MAX_HISTORY}</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+      <immediateFlush>true</immediateFlush>
+    </encoder>
+    <file>${DIRECTORY}/${LOG_FILE_BASE}_error_log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rolling hourly -->
+      <fileNamePattern>${DIRECTORY}/${LOG_FILE_BASE}_error_log.%d{yyyy-MM-dd-HH}.gz</fileNamePattern>
+
+      <maxHistory>${MAX_HISTORY}</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>1024</queueSize>
+    <appender-ref ref="FILE"/>
+  </appender>
+
+  <appender name="ASYNC_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>1024</queueSize>
+    <appender-ref ref="ERROR"/>
+  </appender>
+
+  <root level="${DEFAULT_LEVEL}">
+    <springProfile name="local">
+      <appender-ref ref="CONSOLE"/>
+    </springProfile>
+    <appender-ref ref="ASYNC_FILE"/>
+    <appender-ref ref="ASYNC_ERROR"/>
+  </root>
+</configuration>

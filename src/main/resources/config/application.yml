@@ -1,0 +1,7 @@
+server.port: -1
+armeria:
+  ports:
+    - port: ${armeria.port:8080}
+      protocol: HTTP
+  graceful-shutdown-quiet-period-millis: 100
+  graceful-shutdown-timeout-millis: 200
