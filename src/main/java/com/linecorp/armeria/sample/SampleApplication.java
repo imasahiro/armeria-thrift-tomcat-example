@@ -15,6 +15,8 @@
  */
 package com.linecorp.armeria.sample;
 
+import static com.linecorp.armeria.common.thrift.ThriftSerializationFormats.JSON;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -28,9 +30,9 @@ import org.springframework.context.annotation.Bean;
 
 import com.linecorp.armeria.main.HelloService;
 import com.linecorp.armeria.server.PathMapping;
-import com.linecorp.armeria.server.http.tomcat.TomcatService;
 import com.linecorp.armeria.server.logging.LoggingService;
 import com.linecorp.armeria.server.thrift.THttpService;
+import com.linecorp.armeria.server.tomcat.TomcatService;
 import com.linecorp.armeria.spring.ArmeriaServerConfigurator;
 import com.linecorp.armeria.spring.HttpServiceRegistrationBean;
 import com.linecorp.armeria.spring.ThriftServiceRegistrationBean;
@@ -73,9 +75,17 @@ public class SampleApplication {
     @Bean
     ThriftServiceRegistrationBean thriftService(HelloService.AsyncIface helloService) {
         return new ThriftServiceRegistrationBean()
-                .setServiceName("hello")
+                .setServiceName("tbinary")
                 .setService(THttpService.of(helloService))
                 .setPath("/thrift");
+    }
+
+    @Bean
+    ThriftServiceRegistrationBean tjsonService(HelloService.AsyncIface helloService) {
+        return new ThriftServiceRegistrationBean()
+                .setServiceName("tjson")
+                .setService(THttpService.of(helloService, JSON))
+                .setPath("/thrift.json");
     }
 
     public static void main(String[] args) {
