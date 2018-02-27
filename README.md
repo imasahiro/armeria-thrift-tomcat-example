@@ -6,22 +6,22 @@ How to startup
 
 Tomcat service
 =============
-http://localhost:8080/tomcat/
-http://localhost:8080/tomcat/hello
+* http://localhost:8080/tomcat/
+* http://localhost:8080/tomcat/hello
 
 Thrift over Http
 ==============
-http://localhost:8080/thrift (http+tbinary)
-http://localhost:8080/thrift.json (http+tjson)
+* http://localhost:8080/thrift (http+tbinary)
+* http://localhost:8080/thrift.json (http+tjson)
 
 gRPC
 ==============
-http://localhost:8080/grpc
+* http://localhost:8080/grpc
 
 Doc Service
 ===========
-http://localhost:8080/internal/docs/
+* http://localhost:8080/internal/docs/
 
-Metrics
+Metrics (PrometheusExpositionService)
 ===========
-http://localhost:8080/internal/metrics
+* http://localhost:8080/internal/metrics
