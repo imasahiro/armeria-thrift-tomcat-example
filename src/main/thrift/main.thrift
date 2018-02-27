@@ -1,5 +1,5 @@
 namespace java com.linecorp.armeria.main
 
-service HelloService {
+service HelloThriftService {
     string hello(1:string name)
 }

@@ -32,9 +32,10 @@ import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.ImmutableList;
 
-import com.linecorp.armeria.main.HelloService;
-import com.linecorp.armeria.main.HelloService.hello_args;
+import com.linecorp.armeria.main.HelloThriftService;
+import com.linecorp.armeria.main.HelloThriftService.hello_args;
 import com.linecorp.armeria.server.PathMapping;
+import com.linecorp.armeria.server.grpc.GrpcServiceBuilder;
 import com.linecorp.armeria.server.logging.LoggingService;
 import com.linecorp.armeria.server.thrift.THttpService;
 import com.linecorp.armeria.server.tomcat.TomcatService;
@@ -45,9 +46,16 @@ import com.linecorp.armeria.spring.ThriftServiceRegistrationBean;
 @SpringBootApplication
 public class SampleApplication {
 
+    /**
+     * Register gRPC service.
+     * TODO(ide) Add ServiceRegistrationBean for GRPC.
+     */
     @Bean
-    ArmeriaServerConfigurator serviceInitializer() {
-        return sb -> {};
+    ArmeriaServerConfigurator serviceInitializer(HelloGrpcApiHandler handler) {
+        return sb -> sb.service("/grpc",
+                                new GrpcServiceBuilder().addService(handler)
+                                                        .enableUnframedRequests(true)
+                                                        .build());
     }
 
     @Bean
@@ -78,7 +86,7 @@ public class SampleApplication {
     }
 
     @Bean
-    ThriftServiceRegistrationBean thriftService(HelloService.AsyncIface helloService) {
+    ThriftServiceRegistrationBean thriftService(HelloThriftService.AsyncIface helloService) {
         return new ThriftServiceRegistrationBean()
                 .setServiceName("tbinary")
                 .setService(THttpService.of(helloService))
@@ -86,7 +94,7 @@ public class SampleApplication {
     }
 
     @Bean
-    ThriftServiceRegistrationBean tjsonService(HelloService.AsyncIface helloService) {
+    ThriftServiceRegistrationBean tjsonService(HelloThriftService.AsyncIface helloService) {
         return new ThriftServiceRegistrationBean()
                 .setServiceName("tjson")
                 .setService(THttpService.of(helloService, JSON))

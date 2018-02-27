@@ -24,10 +24,10 @@ import javax.inject.Named;
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
 
-import com.linecorp.armeria.main.HelloService;
+import com.linecorp.armeria.main.HelloThriftService;
 
 @Named
-public class HelloThriftAPIHandler implements HelloService.AsyncIface {
+public class HelloThriftAPIHandler implements HelloThriftService.AsyncIface {
     @Override
     public void hello(String name, AsyncMethodCallback<String> handler) throws TException {
         CompletableFuture<String> asyncResult = CompletableFuture.completedFuture("async");

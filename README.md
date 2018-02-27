@@ -6,18 +6,21 @@ How to startup
 
 Tomcat service
 =============
-http://localhost:8080/my-tomcat-service/
+http://localhost:8080/tomcat/
+http://localhost:8080/tomcat/hello
 
-Thrift service
+Thrift over Http
 ==============
+http://localhost:8080/thrift (http+tbinary)
+http://localhost:8080/thrift.json (http+tjson)
 
-http://localhost:8080/internal/docs/
-
+gRPC
+==============
+http://localhost:8080/grpc
 
 Doc Service
 ===========
 http://localhost:8080/internal/docs/
-
 
 Metrics
 ===========
