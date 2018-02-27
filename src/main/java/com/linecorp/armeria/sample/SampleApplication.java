@@ -18,17 +18,22 @@ package com.linecorp.armeria.sample;
 import static com.linecorp.armeria.common.thrift.ThriftSerializationFormats.JSON;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.catalina.Service;
 import org.apache.catalina.connector.Connector;
+import org.apache.thrift.TBase;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer;
 import org.springframework.context.annotation.Bean;
 
+import com.google.common.collect.ImmutableList;
+
 import com.linecorp.armeria.main.HelloService;
+import com.linecorp.armeria.main.HelloService.hello_args;
 import com.linecorp.armeria.server.PathMapping;
 import com.linecorp.armeria.server.logging.LoggingService;
 import com.linecorp.armeria.server.thrift.THttpService;
@@ -69,7 +74,7 @@ public class SampleApplication {
                 .setServiceName("springMvcTomcatService")
                 .setService(TomcatService.forConnector(tomcatConnector)
                                          .decorate(LoggingService.newDecorator()))
-                .setPathMapping(PathMapping.ofPrefix("/my-tomcat-service"));
+                .setPathMapping(PathMapping.ofPrefix("/tomcat"));
     }
 
     @Bean
@@ -85,7 +90,12 @@ public class SampleApplication {
         return new ThriftServiceRegistrationBean()
                 .setServiceName("tjson")
                 .setService(THttpService.of(helloService, JSON))
-                .setPath("/thrift.json");
+                .setPath("/thrift.json")
+                .setExampleRequests(createSampleRequests());
+    }
+
+    private static List<TBase<?, ?>> createSampleRequests() {
+        return ImmutableList.of(new hello_args().setName("world"));
     }
 
     public static void main(String[] args) {
