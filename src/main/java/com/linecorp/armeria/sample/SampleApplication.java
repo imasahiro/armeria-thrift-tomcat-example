@@ -26,8 +26,8 @@ import org.apache.catalina.connector.Connector;
 import org.apache.thrift.TBase;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer;
+import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.google.common.collect.ImmutableList;
@@ -59,13 +59,14 @@ public class SampleApplication {
     }
 
     @Bean
-    HttpServiceRegistrationBean springMvcTomcatService(final EmbeddedWebApplicationContext applicationContext) {
-        final TomcatEmbeddedServletContainer container =
-                (TomcatEmbeddedServletContainer) applicationContext.getEmbeddedServletContainer();
+    HttpServiceRegistrationBean springMvcTomcatService(
+            final ServletWebServerApplicationContext applicationContext) {
+        final TomcatWebServer container =
+                (TomcatWebServer) applicationContext.getWebServer();
         Connector tomcatConnector = container.getTomcat().getConnector();
         if (tomcatConnector == null) {
             try {
-                Field serviceConnectorsField = TomcatEmbeddedServletContainer.class.getDeclaredField(
+                Field serviceConnectorsField = TomcatWebServer.class.getDeclaredField(
                         "serviceConnectors");
                 serviceConnectorsField.setAccessible(true);
                 @SuppressWarnings("unchecked")
