@@ -5,9 +5,9 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.10'
+        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.15'
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.11.RELEASE'
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.3'
     }
 }
@@ -49,12 +49,12 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile 'com.linecorp.armeria:armeria-spring-boot-starter-shaded:0.58.1'
-    compile 'com.linecorp.armeria:armeria-grpc-shaded:0.58.1'
-    compile 'com.linecorp.armeria:armeria-thrift-shaded:0.58.1'
-    compile "com.linecorp.armeria:armeria-tomcat-shaded:0.58.1"
+    compile 'com.linecorp.armeria:armeria-spring-boot-starter-shaded:0.59.2'
+    compile 'com.linecorp.armeria:armeria-grpc-shaded:0.59.2'
+    compile 'com.linecorp.armeria:armeria-thrift-shaded:0.59.2'
+    compile "com.linecorp.armeria:armeria-tomcat-shaded:0.59.2"
 
-    apt 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
 
     compile 'com.google.guava:guava:24.0-jre'
