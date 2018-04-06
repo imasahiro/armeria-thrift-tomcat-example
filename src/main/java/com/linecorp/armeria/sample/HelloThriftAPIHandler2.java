@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Masahiro Ide
+ * Copyright 2018 Masahiro Ide
  *
  * LINE Corporation licenses this file to you under the Apache License,
  * version 2.0 (the "License"); you may not use this file except in compliance
@@ -24,30 +24,19 @@ import javax.inject.Named;
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
 
-import com.linecorp.armeria.client.ClientFactory;
 import com.linecorp.armeria.main.HelloThriftService;
 
-@Named("helloServer1")
-public class HelloThriftAPIHandler implements HelloThriftService.AsyncIface {
-    private final HelloThriftService.AsyncIface client;
-
-    public HelloThriftAPIHandler() {
-        this.client = ClientFactory.DEFAULT.newClient("tjson+http://localhost:8080/thrift.json",
-                                                      HelloThriftService.AsyncIface.class);
-    }
-
+@Named("helloServer2")
+public class HelloThriftAPIHandler2 implements HelloThriftService.AsyncIface {
     @Override
     public void hello(String name, AsyncMethodCallback<String> handler) throws TException {
-        client.hello(name, new AsyncMethodCallback<String>() {
-            @Override
-            public void onComplete(String response) {
-                handler.onComplete(response);
+        CompletableFuture<String> asyncResult = CompletableFuture.completedFuture("async");
+        asyncResult.handle(voidFunction((result, thrown) -> {
+            if (thrown != null) {
+                handler.onError((Exception) thrown);
+            } else {
+                handler.onComplete("hello world");
             }
-
-            @Override
-            public void onError(Exception exception) {
-                handler.onError(exception);
-            }
-        });
+        }));
     }
 }

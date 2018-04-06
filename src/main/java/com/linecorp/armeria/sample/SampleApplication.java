@@ -21,6 +21,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Named;
+
 import org.apache.catalina.Service;
 import org.apache.catalina.connector.Connector;
 import org.apache.thrift.TBase;
@@ -86,7 +88,8 @@ public class SampleApplication {
     }
 
     @Bean
-    ThriftServiceRegistrationBean thriftService(HelloThriftService.AsyncIface helloService) {
+    ThriftServiceRegistrationBean thriftService(
+            @Named("helloServer1") HelloThriftService.AsyncIface helloService) {
         return new ThriftServiceRegistrationBean()
                 .setServiceName("tbinary")
                 .setService(THttpService.of(helloService))
@@ -94,7 +97,8 @@ public class SampleApplication {
     }
 
     @Bean
-    ThriftServiceRegistrationBean tjsonService(HelloThriftService.AsyncIface helloService) {
+    ThriftServiceRegistrationBean tjsonService(
+            @Named("helloServer2") HelloThriftService.AsyncIface helloService) {
         return new ThriftServiceRegistrationBean()
                 .setServiceName("tjson")
                 .setService(THttpService.of(helloService, JSON))
