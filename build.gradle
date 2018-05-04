@@ -53,10 +53,11 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile 'com.linecorp.armeria:armeria-spring-boot-starter-shaded:0.59.2'
-    compile 'com.linecorp.armeria:armeria-grpc-shaded:0.59.2'
-    compile 'com.linecorp.armeria:armeria-thrift-shaded:0.59.2'
-    compile 'com.linecorp.armeria:armeria-tomcat-shaded:0.59.2'
+    def armeriaVersion = '0.63.1'
+    compile 'com.linecorp.armeria:armeria-spring-boot-starter-shaded:' + armeriaVersion
+    compile 'com.linecorp.armeria:armeria-grpc-shaded:' + armeriaVersion
+    compile 'com.linecorp.armeria:armeria-thrift-shaded:' + armeriaVersion
+    compile 'com.linecorp.armeria:armeria-tomcat-shaded:' + armeriaVersion
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
